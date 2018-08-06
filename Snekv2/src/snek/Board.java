@@ -26,7 +26,7 @@ public class Board extends JFrame { //se puede implementar esto por los componen
     private int pixel = 20;  //Tama;o por celda o "pixel"
     private int pixel_total = 800; // cuantos pixeles (el area de juego)
    
-    private int speed = 100; //velocidad. es el tiempo entre movimientos. entre mas bajo mas rapido el juego
+    private int speed = 80; //velocidad. es el tiempo entre movimientos. entre mas bajo mas rapido el juego
     
     
     private boolean inGame = true; //marca que el jugador esta en juego, asi se sabe cuando parar de refresh y poner en false cuando se pierde
