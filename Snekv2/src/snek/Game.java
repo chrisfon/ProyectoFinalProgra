@@ -64,9 +64,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
          
             //AQUI VA LA LINEA QUE CIERRA EL ANTIGUO JUEGO CON LA X
         }
-        if (lastkeyPressed==KeyEvent.VK_DOWN){
-            keyPressed=KeyEvent.VK_UP;
-        }
+        
         lastkeyPressed = keyPressed;
 
         keyPressed = e.getKeyCode();//key code lo que hace es que usa una funcion diferente que depende que letra usa.(de una lista https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html)
@@ -100,7 +98,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             graphic.setColor(Color.white);
             graphic.setFont(new Font("Sans serif", Font.ITALIC, 40));
             graphic.drawString("Perdio", 200, 200);
-            graphic.drawString("Puntos:" + playerSize, 200, 400);
+            graphic.drawString("Puntos:" + playerSize, 200, 400);       //AGREGAR HIGHSCORES
             graphic.drawString("Presione 'A' para reiniciar ", 200, 600);
             graphic.drawString("Nombre:" + playerName, 200, 300);
 
@@ -123,7 +121,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 fileWriter.append(this.playerName);
                 fileWriter.append(",");
                 fileWriter.append(String.valueOf(this.playerSize));
-                fileWriter.append("\n");
+                fileWriter.append("\n");                //PASAR A OTRA CLASE
                 fileWriter.flush();
                 fileWriter.close();
                 isSaving = false;

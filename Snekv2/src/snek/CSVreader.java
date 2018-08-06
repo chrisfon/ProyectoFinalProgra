@@ -26,7 +26,7 @@ public void Reader(){
                 // use comma as separator
                 String[] name = line.split(cvsSplitBy);
 
-                System.out.println("Country [code= " + name[4] + " , name=" + name[5] + "]");
+                System.out.println("PUNTOS:" + name[0] + " , NOMBRE:" + name[1] + "]");
 
             }
 
