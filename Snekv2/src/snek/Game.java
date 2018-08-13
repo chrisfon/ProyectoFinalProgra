@@ -10,13 +10,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileWriter;
-
+import java.util.Random;
 /**
  *
  * @author ulacit
  */
 public class Game extends JPanel implements KeyListener, ActionListener {
-
+    Random rand = new Random();
     Scanner scan = new Scanner(System.in);
 
     private String playerName = JOptionPane.showInputDialog("Ingrese su nombre");
@@ -25,25 +25,32 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private int pixel_total = 800; // cuantos pixeles (el area de juego)
     private int pixel = 20;  //Tama;o por celda o "pixel"
 
-    private int playerSize = 6; //Tama;o del jugador, inicia en 3. Esto se va a usar para cuando coma.
+    private int playerSize = 3; //Tama;o del jugador, inicia en 3. Esto se va a usar para cuando coma.
     private int[] playerX = new int[pixel_total]; //un array del tama;o de todo el area. (porque es hasta adonde puede crecer el jugador) es como una lista vacia que se llena cada vez que crece.
     private int[] playerY = new int[pixel_total]; //otro array del mismo tama;o (para coordenada y)
 
+   private int scoreX;
+   private int scoreY;
+  
+    
     private boolean inGame = true; //marca que el jugador esta en juego, asi se sabe cuando parar de refresh y poner en false cuando se pierde
 
-    int keyPressed; //la direccion hacia adonde va a iniciar
+    int keyPressed=KeyEvent.VK_DOWN; //la direccion hacia adonde va a iniciar
     int lastkeyPressed;
-
+    
+    boolean upSpeed=false;
+    
     private boolean isSaving=true;
    
     Game() {
+        makeScore();
         isSaving=true;
         setBackground(Color.black);
 
         //de adonde inicia
         for (int i = 0; i < playerSize; i++) {
             playerX[i] = 100;
-            playerY[i] = 10 - (i * pixel);
+            playerY[i] = 20 - (i * pixel);
 
         }
 
@@ -57,7 +64,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
          
             //AQUI VA LA LINEA QUE CIERRA EL ANTIGUO JUEGO CON LA X
         }
-
+        
         lastkeyPressed = keyPressed;
 
         keyPressed = e.getKeyCode();//key code lo que hace es que usa una funcion diferente que depende que letra usa.(de una lista https://docs.oracle.com/javafx/2/api/javafx/scene/input/KeyCode.html)
@@ -69,6 +76,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
 
         if (inGame == true) {
 
+            
+            //PINTA CULEBRA
             for (int i = 0; i < playerSize; i++) { // para todo el tama;o del jugador
 
                 if (i == 0) { //si no es posicion 0 (cabeza)
@@ -79,31 +88,40 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 graphic.drawString("Puntos:" + playerSize, 700, 700);
                 graphic.fillRect(playerX[i], playerY[i], pixel, pixel);
                 //pintar coordenadas del personaje, ancho del objeto a pintar(pixel), largo del objeto a pintar(pixel)
-
-                //PINTAR MANZANA
             }
-
-        } else if (inGame == false) {
+       //PINTAR MANZANA
+           graphic.setColor(Color.red);
+           graphic.fillRect(scoreX,scoreY,pixel,pixel);
+        } else if (!inGame) {
 
             //PANTALLA DE MUERTE 
             graphic.setColor(Color.white);
             graphic.setFont(new Font("Sans serif", Font.ITALIC, 40));
             graphic.drawString("Perdio", 200, 200);
-            graphic.drawString("Puntos:" + playerSize, 200, 400);
+            graphic.drawString("Puntos:" + playerSize, 200, 400);       //AGREGAR HIGHSCORES
             graphic.drawString("Presione 'A' para reiniciar ", 200, 600);
             graphic.drawString("Nombre:" + playerName, 200, 300);
 
             //PARTE DE SALVAR LOS SCORES
             FileWriter fileWriter = null; //para definir fileWriter e iniciarlo
-         if (inGame == false && isSaving == true){   
-            try {
+         if (!inGame && isSaving){   
+           
+
+//cambiar a otra clase, separar en dos metodos
+             
+             try {
                 fileWriter = new FileWriter("Scores.csv",true); //crea nuevo file y borra lo anterior, el true es para que le agrege y no haga overwrite a lo viejo
                 fileWriter.append("Score,Name");
-                fileWriter.append("\n");
+             }catch (Exception e){
+                 System.out.print("Error haciendo archivo");
+             }
+             
+             try{   
+                fileWriter.append("\n");                //NO SE GUARDA SI ESTA ABIERTO EL FILE
                 fileWriter.append(this.playerName);
                 fileWriter.append(",");
                 fileWriter.append(String.valueOf(this.playerSize));
-                fileWriter.append("\n");
+                fileWriter.append("\n");                //PASAR A OTRA CLASE
                 fileWriter.flush();
                 fileWriter.close();
                 isSaving = false;
@@ -128,7 +146,7 @@ public class Game extends JPanel implements KeyListener, ActionListener {
                 } else if (lastkeyPressed == KeyEvent.VK_UP) {
 
                     playerY[0] -= pixel;
-                    lastkeyPressed = KeyEvent.VK_UP;
+                   lastkeyPressed = KeyEvent.VK_UP;
 
                 }
 
@@ -172,6 +190,22 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         } else if (playerY[0] >= boardH - pixel || playerY[0] < 0) {
             inGame = false;
 
+        } else if ((playerX[0]==scoreX) && (playerY[0]==scoreY)){
+            playerSize++;
+            makeScore();
+            
+        } 
+        for (int i=1;i<playerX.length;i++){
+           if (playerX[0]==playerX[i] && playerY[0]==playerY[i]){
+               inGame=false;
+           } 
         }
+        
     }
+    public void makeScore(){
+       scoreX = (rand.nextInt(37)*20)+20;
+       scoreY = (rand.nextInt(37)*20)+20;
+       
+    }
+    
 }
