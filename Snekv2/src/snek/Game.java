@@ -18,7 +18,8 @@ import java.util.Random;
 public class Game extends JPanel implements KeyListener, ActionListener {
     Random rand = new Random();
     Scanner scan = new Scanner(System.in);
-
+    CSVwriter writer= new CSVwriter(); //writer para los puntos
+    
     private String playerName = JOptionPane.showInputDialog("Ingrese su nombre");
     private int boardW = 20 * 40; //ancho
     private int boardH = 20 * 40; //largo
@@ -43,6 +44,8 @@ public class Game extends JPanel implements KeyListener, ActionListener {
     private boolean isSaving=true;
    
     Game() {
+        
+        
         makeScore();
         isSaving=true;
         setBackground(Color.black);
@@ -105,31 +108,14 @@ public class Game extends JPanel implements KeyListener, ActionListener {
             //PARTE DE SALVAR LOS SCORES
             FileWriter fileWriter = null; //para definir fileWriter e iniciarlo
          if (!inGame && isSaving){   
-           
+             writer.CSVaddscore(playerName, playerSize);
 
-//cambiar a otra clase, separar en dos metodos
-             
-             try {
-                fileWriter = new FileWriter("Scores.csv",true); //crea nuevo file y borra lo anterior, el true es para que le agrege y no haga overwrite a lo viejo
-                fileWriter.append("Score,Name");
-             }catch (Exception e){
-                 System.out.print("Error haciendo archivo");
-             }
-             
-             try{   
-                fileWriter.append("\n");                //NO SE GUARDA SI ESTA ABIERTO EL FILE
-                fileWriter.append(this.playerName);
-                fileWriter.append(",");
-                fileWriter.append(String.valueOf(this.playerSize));
-                fileWriter.append("\n");                //PASAR A OTRA CLASE
-                fileWriter.flush();
-                fileWriter.close();
-                isSaving = false;
-            } catch (Exception e) {
-                System.out.print("ERROR GUARDANDO PUNTOS");
-            }
+            isSaving = false; 
          }
-        }
+            
+            
+            
+        }   
     }
 
     private void movement() {
@@ -203,9 +189,14 @@ public class Game extends JPanel implements KeyListener, ActionListener {
         
     }
     public void makeScore(){
-       scoreX = (rand.nextInt(37)*20)+20;
-       scoreY = (rand.nextInt(37)*20)+20;
+       scoreX = (rand.nextInt(37)*pixel)+pixel;
+       scoreY = (rand.nextInt(37)*pixel)+pixel;
        
     }
-    
+    public boolean getInGame(){
+        return inGame;
+    }
+    public boolean getisSaving(){
+        return isSaving;
+    }
 }

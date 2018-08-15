@@ -16,6 +16,8 @@ public class Snek {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        CSVwriter writer= new CSVwriter(); //writer para los puntos
+        writer.CSVIntro();
         Board b=new Board();
     }
     
