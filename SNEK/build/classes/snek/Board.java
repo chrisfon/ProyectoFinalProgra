@@ -28,7 +28,6 @@ public class Board extends JFrame {
     public Board() {
         
         this.setSize(boardW, boardH);
-        this.setResizable(false);
         Game game = new Game(); //Inicia el juego
         addKeyListener(game); //agrega funcion para leer que estripa el jugador
         add(game);
